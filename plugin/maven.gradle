@@ -12,7 +12,7 @@ if (!false.toBoolean()){
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri('../repo'))
+            repository(url: uri('/Users/edz/.m2/repository'))
         }
     }
 }

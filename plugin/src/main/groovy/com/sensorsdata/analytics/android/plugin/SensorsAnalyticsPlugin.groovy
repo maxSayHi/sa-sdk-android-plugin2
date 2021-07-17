@@ -29,29 +29,15 @@ class SensorsAnalyticsPlugin implements Plugin<Project> {
         def args = [ins] as Object[]
         SensorsAnalyticsExtension extension = project.extensions.create("sensorsAnalytics", SensorsAnalyticsExtension, args)
 
-        boolean disableSensorsAnalyticsPlugin = false
         boolean disableSensorsAnalyticsMultiThreadBuild = false
         boolean disableSensorsAnalyticsIncrementalBuild = false
         boolean isHookOnMethodEnter = false
-        Properties properties = new Properties()
-        if (project.rootProject.file('gradle.properties').exists()) {
-            properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
-            disableSensorsAnalyticsPlugin = Boolean.parseBoolean(properties.getProperty("sensorsAnalytics.disablePlugin", "false")) ||
-                    Boolean.parseBoolean(properties.getProperty("disableSensorsAnalyticsPlugin", "false"))
-            disableSensorsAnalyticsMultiThreadBuild = Boolean.parseBoolean(properties.getProperty("sensorsAnalytics.disableMultiThreadBuild", "false"))
-            disableSensorsAnalyticsIncrementalBuild = Boolean.parseBoolean(properties.getProperty("sensorsAnalytics.disableIncrementalBuild", "false"))
-            isHookOnMethodEnter = Boolean.parseBoolean(properties.getProperty("sensorsAnalytics.isHookOnMethodEnter", "false"))
-        }
-        if (!disableSensorsAnalyticsPlugin) {
-            AppExtension appExtension = project.extensions.findByType(AppExtension.class)
-            SensorsAnalyticsTransformHelper transformHelper = new SensorsAnalyticsTransformHelper(extension, appExtension)
-            transformHelper.disableSensorsAnalyticsIncremental = disableSensorsAnalyticsIncrementalBuild
-            transformHelper.disableSensorsAnalyticsMultiThread = disableSensorsAnalyticsMultiThreadBuild
-            transformHelper.isHookOnMethodEnter = isHookOnMethodEnter
-            appExtension.registerTransform(new SensorsAnalyticsTransform(transformHelper))
-        } else {
-            Logger.error("------------您已关闭了神策插件--------------")
-        }
+        AppExtension appExtension = project.extensions.findByType(AppExtension.class)
+        SensorsAnalyticsTransformHelper transformHelper = new SensorsAnalyticsTransformHelper(extension, appExtension)
+        transformHelper.disableSensorsAnalyticsIncremental = disableSensorsAnalyticsIncrementalBuild
+        transformHelper.disableSensorsAnalyticsMultiThread = disableSensorsAnalyticsMultiThreadBuild
+        transformHelper.isHookOnMethodEnter = isHookOnMethodEnter
+        appExtension.registerTransform(new SensorsAnalyticsTransform(transformHelper))
 
     }
 }
